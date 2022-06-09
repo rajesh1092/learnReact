@@ -1,6 +1,8 @@
-import React, { Component } from "react";
-import Person from './Person/Person';
-import classes from"./App.module.css";
+import React, { Component } from 'react';
+import Persons from '../Components/Persons/Persons';
+import classes from './App.module.css';
+import Cockpit from '../Components/cockpit/cockpit';
+//import ErrorBoundry from '../Errorboundry/ErrorBoundry';
 //import styled from 'styled-components';
 
 // //const StyledButton = styled.button`
@@ -21,8 +23,6 @@ import classes from"./App.module.css";
 //                     color: ${props => props.char<=2  && 'red' };
 //                     font-weight: ${props => props.char<=1  && 'bold'};
                    // `
-
-
 class App extends Component {
   state = {
     person: [
@@ -31,8 +31,7 @@ class App extends Component {
       {id:'as3', name: 'stephenie', age: 21}
     ],
     showPersons: false
-  }
-  
+  } 
   // switchEventHandler = (newName) => {
   //   //console.log('switch');
   //  // dont use this: this.state.person[0].name= 'Maxmilian';
@@ -68,8 +67,7 @@ class App extends Component {
     this.setState ({ showPersons: !doesShow}); 
   }
 
-  render() {
-    const btnClasses = [classes.Button];
+  render() {    
     // const style = {
     //   backgroundColor: 'green',
     //   color: 'white',
@@ -82,59 +80,36 @@ class App extends Component {
     //     color : 'black'
     //   }
     // };
-
-    
-
     let persons = null;
-
     if(this.state.showPersons){
-        persons =(
+      persons =(
       <div>
-        {this.state.person.map((person, index) => {
-          return<Person
-          click ={() =>this.deletePersonHandler(index)}
-          name = {person.name}
-          age = {person.age}
-          key = {person.id}
-          Change = {(event) => this.nameChangeHandler(event, person.id)}
-          />
-
-        })} 
+        <Persons
+        persons ={this.state.person}
+        click = {this.deletePersonHandler}
+        Change = {this.nameChangeHandler} />
       </div>
-    )
-    btnClasses.push(classes.Red);
+    );  
     // style.backgroundColor = 'red';
     // style[':hover'] = {
     //   backgroundColor: 'salmon',
     //   color: 'black'
     // }
   };
- 
-
-
-   const assignedClasses = [];
-  if(this.state.person.length <= 2){
-    assignedClasses.push(classes.red);
-  }
-  if (this.state.person.length<= 1){
-    assignedClasses.push(classes.bold);
-    assignedClasses.push(classes.font);
-  }
-
     return (
      // <StyleRoot>      
         <div className={classes.App}>
-        <h1>hi guys</h1>
-        <p className={assignedClasses.join(' ')} >yeh! its workong</p>
-        <button
-        className = {btnClasses.join(' ')} onClick={this.togglePersonHandler}>Toggle button</button>
-        {persons}         
+         <Cockpit 
+         title = {this.props.appTitle}
+         showPersons={this.state.showPersons}
+         person = {this.state.person}
+         click = {this.togglePersonHandler}
+         />   
+         {persons}   
       </div>
     //  </StyleRoot>
-
     );
   }
   // return React.createElement("div",{className: 'App'},  React.createElement("h1",null, "hi guys its react!!!"));
 }
-
 export default App;
