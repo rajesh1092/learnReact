@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 //import styled from 'styled-components';
 import classes from"./Person.module.css";
 // const StyleDiv =  styled.div`
@@ -10,21 +10,24 @@ import classes from"./Person.module.css";
 //                     text-align: center;
 
 //                      @media (min-width: 500px) {
-//                          width : 450px;       
-//                     `
-const person = (props) =>{
+//                          width : 450px;`       
+
+class Person extends Component{
+    render(){
+        console.log('[Person.js] rendering...');
+        return(
+            <div className={classes.Person} >
+                <p  onClick={this.props.click}> I am a {this.props.name} and i am {[this.props.age]} years old </p>
+                <p>{this.props.children}</p>
+                <input type='text' onChange={this.props.Change} value={this.props.name} />
+            </div>       
+        );
+
+    }
+};                   
     // const style = {
     //     '@media (min-width: 500px)':{
     //         width : '450px'
     //     }
     // }
-    return(
-        <div className={classes.Person} >
-            <p  onClick={props.click}> I am a {props.name} and i am {[props.age]} years old </p>
-            <p>{props.children}</p>
-            <input type='text' onChange={props.Change} value={props.name} />
-        </div>       
-    );
-}
-
- export default person; 
+ export default Person; 

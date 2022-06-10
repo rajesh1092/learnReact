@@ -24,13 +24,51 @@ import Cockpit from '../Components/cockpit/cockpit';
 //                     font-weight: ${props => props.char<=1  && 'bold'};
                    // `
 class App extends Component {
+
+  constructor (props){
+    super (props);
+    console.log('[App.js] constructor');
+  }
+  // state can be declared  in constructor using this.state 
+  // below is the new method to construct a state vvv
+  //***** after constructor getderivedFromState works VVV
   state = {
     person: [
       {id:'as1', name: 'Max',age: 28 },
       {id:'as2', name: 'SId', age: 23},
       {id:'as3', name: 'stephenie', age: 21}
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
+  } 
+  //***** after constructor getderivedFromState works VVV
+  // add static is important so can react can execute this static method
+  //***** after getderivedFromState works render method VVV
+  static getDerivedStateFromProps(props, state){
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
+  }
+
+//*****componentwillmount used historically and it still exists  
+// it called before componentdidmount and works as setting state  
+  // componentWillMount(){
+  //   console.log('[App.js] componentWillMount');
+  // }
+  
+  //***after rendering childelements componentdidmount() executes
+  // WE use componentdidmount to make http request bu not here
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+  }
+
+  //lifecycle for internal changes when the state changes
+  componentDidUpdate(){
+    console.log('[App.js] componentDidUpdate')
   } 
   // switchEventHandler = (newName) => {
   //   //console.log('switch');
@@ -67,7 +105,12 @@ class App extends Component {
     this.setState ({ showPersons: !doesShow}); 
   }
 
+  
+
   render() {    
+  //***** after getderivedFromState works render method VVV
+  console.log('[App.js] render');
+
     // const style = {
     //   backgroundColor: 'green',
     //   color: 'white',
@@ -99,12 +142,17 @@ class App extends Component {
     return (
      // <StyleRoot>      
         <div className={classes.App}>
-         <Cockpit 
+          <button onClick={()=> {
+            this.setState({showCockpit: false})
+          }}>
+            Remove cockpit
+          </button>
+         {this.state.showCockpit ? (<Cockpit 
          title = {this.props.appTitle}
          showPersons={this.state.showPersons}
-         person = {this.state.person}
+         personLength = {this.state.person.length}
          click = {this.togglePersonHandler}
-         />   
+         />) : null }  
          {persons}   
       </div>
     //  </StyleRoot>
