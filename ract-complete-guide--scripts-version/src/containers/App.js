@@ -1,6 +1,8 @@
-import React, { Component } from "react";
-import Person from './Person/Person';
-import classes from"./App.module.css";
+import React, { Component } from 'react';
+import Persons from '../Components/Persons/Persons';
+import classes from './App.module.css';
+import Cockpit from '../Components/cockpit/cockpit';
+//import ErrorBoundry from '../Errorboundry/ErrorBoundry';
 //import styled from 'styled-components';
 
 // //const StyledButton = styled.button`
@@ -21,18 +23,53 @@ import classes from"./App.module.css";
 //                     color: ${props => props.char<=2  && 'red' };
 //                     font-weight: ${props => props.char<=1  && 'bold'};
                    // `
-
-
 class App extends Component {
+
+  constructor (props){
+    super (props);
+    console.log('[App.js] constructor');
+  }
+  // state can be declared  in constructor using this.state 
+  // below is the new method to construct a state vvv
+  //***** after constructor getderivedFromState works VVV
   state = {
     person: [
       {id:'as1', name: 'Max',age: 28 },
       {id:'as2', name: 'SId', age: 23},
       {id:'as3', name: 'stephenie', age: 21}
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
+  } 
+  //***** after constructor getderivedFromState works VVV
+  // add static is important so can react can execute this static method
+  //***** after getderivedFromState works render method VVV
+  static getDerivedStateFromProps(props, state){
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
   }
+
+//*****componentwillmount used historically and it still exists  
+// it called before componentdidmount and works as setting state  
+  // componentWillMount(){
+  //   console.log('[App.js] componentWillMount');
+  // }
   
+  //***after rendering childelements componentdidmount() executes
+  // WE use componentdidmount to make http request bu not here
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+  }
+
+  //lifecycle for internal changes when the state changes
+  componentDidUpdate(){
+    console.log('[App.js] componentDidUpdate')
+  } 
   // switchEventHandler = (newName) => {
   //   //console.log('switch');
   //  // dont use this: this.state.person[0].name= 'Maxmilian';
@@ -68,8 +105,12 @@ class App extends Component {
     this.setState ({ showPersons: !doesShow}); 
   }
 
-  render() {
-    const btnClasses = [classes.Button];
+  
+
+  render() {    
+  //***** after getderivedFromState works render method VVV
+  console.log('[App.js] render');
+
     // const style = {
     //   backgroundColor: 'green',
     //   color: 'white',
@@ -82,59 +123,41 @@ class App extends Component {
     //     color : 'black'
     //   }
     // };
-
-    
-
     let persons = null;
-
     if(this.state.showPersons){
-        persons =(
+      persons =(
       <div>
-        {this.state.person.map((person, index) => {
-          return<Person
-          click ={() =>this.deletePersonHandler(index)}
-          name = {person.name}
-          age = {person.age}
-          key = {person.id}
-          Change = {(event) => this.nameChangeHandler(event, person.id)}
-          />
-
-        })} 
+        <Persons
+        persons ={this.state.person}
+        click = {this.deletePersonHandler}
+        Change = {this.nameChangeHandler} />
       </div>
-    )
-    btnClasses.push(classes.Red);
+    );  
     // style.backgroundColor = 'red';
     // style[':hover'] = {
     //   backgroundColor: 'salmon',
     //   color: 'black'
     // }
   };
- 
-
-
-   const assignedClasses = [];
-  if(this.state.person.length <= 2){
-    assignedClasses.push(classes.red);
-  }
-  if (this.state.person.length<= 1){
-    assignedClasses.push(classes.bold);
-    assignedClasses.push(classes.font);
-  }
-
     return (
      // <StyleRoot>      
         <div className={classes.App}>
-        <h1>hi guys</h1>
-        <p className={assignedClasses.join(' ')} >yeh! its workong</p>
-        <button
-        className = {btnClasses.join(' ')} onClick={this.togglePersonHandler}>Toggle button</button>
-        {persons}         
+          <button onClick={()=> {
+            this.setState({showCockpit: false})
+          }}>
+            Remove cockpit
+          </button>
+         {this.state.showCockpit ? (<Cockpit 
+         title = {this.props.appTitle}
+         showPersons={this.state.showPersons}
+         personLength = {this.state.person.length}
+         click = {this.togglePersonHandler}
+         />) : null }  
+         {persons}   
       </div>
     //  </StyleRoot>
-
     );
   }
   // return React.createElement("div",{className: 'App'},  React.createElement("h1",null, "hi guys its react!!!"));
 }
-
 export default App;
